@@ -57,7 +57,7 @@ async function getDsaHierarchy(dsaMobileNumber) {
       INNER JOIN DSAHierarchy d ON t.partner_code = d.dsa_mobile_number
       WHERE t.partner_code IS NOT NULL
     )
-    SELECT dsa_mobile_number
+    SELECT dsa_id
     FROM DSAHierarchy;
   `;
 
@@ -66,7 +66,8 @@ async function getDsaHierarchy(dsaMobileNumber) {
     type: QueryTypes.SELECT,
   });
 
-  return results.map(row => row.dsa_mobile_number);
+  results = results.map(row => row.dsa_id);
+  return results.push(process.env.KM_DSA_ID);
 }
 
 module.exports = {
