@@ -61,7 +61,7 @@ async function getDsaHierarchy(dsaMobileNumber) {
     FROM DSAHierarchy;
   `;
 
-  const results = await _sequelize.query(hierarchyQuery, {
+  let results = await _sequelize.query(hierarchyQuery, {
     replacements: { dsaMobileNumber },
     type: QueryTypes.SELECT,
   });
