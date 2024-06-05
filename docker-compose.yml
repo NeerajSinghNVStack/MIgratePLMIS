@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+
+  filebeat:
+    build:
+        context: ./filebeat
+    container_name: filebeatcrm
+    command: filebeat -e -strict.perms=false
+    volumes:
+        - ./logs:/src/logs
