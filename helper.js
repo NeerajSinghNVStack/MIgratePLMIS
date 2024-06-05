@@ -1,5 +1,6 @@
 require('dotenv').config({ path: '.env' });
 const sequelize = require('./models');
+const path = require('path');
 const { QueryTypes} = require("sequelize");
 
 const { MongoClient } = require('mongodb');
@@ -7,13 +8,32 @@ const { logger } = require('./logger');
 
 async function updateOrCreateMongoMIS(application) {
     const { application_id, lender, loan_type } = application;
-    const uri = process.env.MONGO_MIS_URI;
+    const uri = process.env.MONGO_MIS_URI + ( process.env.ENVIRONMENT  == 'prod'?process.env.MONGO_PROXY_PATH:'');
     const dbName = process.env.MONGO_MIS_DB_NAME;
     const collectionName = process.env.MONGO_MIS_DB_COLLECTION;
-  
+
+    let client;
     try {
-      const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-      await client.connect();
+      if(process.env.ENVIRONMENT  == 'prod'){
+        const pemPath =  path.resolve(__dirname, process.env.MONGO_PROXY_PATH);
+        client = new MongoClient(uri,  {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          tlsCAFile: pemPath, // Ensure this matches the URI parameter
+          tls: true,
+          tlsAllowInvalidCertificates: false, // Set to true if you want to allow invalid certificates
+          tlsAllowInvalidHostnames: false,   // Set to true if you want to allow invalid hostnames
+          serverSelectionTimeoutMS: 5000     // Adjust the timeout as needed
+        });
+        await client.connect();
+      }else{
+        client = new MongoClient(uri,  {
+          useNewUrlParser: true,
+          useUnifiedTopology: true
+         });
+        await client.connect();
+      }
+      
       logger.info('Connected to the MongoDB server');
   
       // Get the database
@@ -38,6 +58,7 @@ async function updateOrCreateMongoMIS(application) {
   
       await client.close();
     } catch (err) {
+      console.log(err)
       logger.error('Error updating or creating MongoDB document', { err });
       throw err;
     }

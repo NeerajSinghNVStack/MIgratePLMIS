@@ -92,6 +92,7 @@ async function fetchPersonalLoanApplications() {
         await updateOrCreateMongoMIS(formattedApplication);
         logger.info(`Successfully updated or created MongoDB record for ${type} application`, { application_id: application.application_id });
       } catch (error) {
+        console.log(error)
         logger.error(`Error updating or creating MongoDB record for ${type} application`, { application_id: application.application_id, error });
         // Continue to the next application even if an error occurs
       }
