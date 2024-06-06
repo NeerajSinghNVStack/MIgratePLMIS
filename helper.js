@@ -31,7 +31,7 @@ async function updateOrCreateMongoMIS(application) {
         client = new MongoClient(uri,  {
           useNewUrlParser: true,
           useUnifiedTopology: true,
-          retryWrites: true 
+          retryWrites: false
          });
         await client.connect();
       }
