@@ -13,6 +13,7 @@ async function updateOrCreateMongoMIS(application) {
     const collectionName = process.env.MONGO_MIS_DB_COLLECTION;
 
     let client;
+    
     try {
       if(process.env.ENVIRONMENT  == 'prod'){
         const pemPath =  path.resolve(__dirname, process.env.MONGO_PROXY_PATH);
@@ -29,7 +30,8 @@ async function updateOrCreateMongoMIS(application) {
       }else{
         client = new MongoClient(uri,  {
           useNewUrlParser: true,
-          useUnifiedTopology: true
+          useUnifiedTopology: true,
+          retryWrites: true 
          });
         await client.connect();
       }

@@ -17,7 +17,7 @@ async function fetchPersonalLoanApplications() {
       logger.error('Error reading offsets file:', err);
     }
 
-    const batchSize = 10;
+    const batchSize = 100;
     const type = 'incred'; // Type for incred personal loan applications
 
     logger.info(`Fetching the first ${batchSize} ${type} 100 personal loan applications.`);
