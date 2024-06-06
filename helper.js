@@ -8,7 +8,7 @@ const { logger } = require('./logger');
 
 async function updateOrCreateMongoMIS(application) {
     const { application_id, lender, loan_type } = application;
-    const uri = process.env.MONGO_MIS_URI + ( process.env.ENVIRONMENT  == 'prod'?process.env.MONGO_PROXY_PATH:'');
+    const uri = process.env.MONGO_MIS_URI// + ( process.env.ENVIRONMENT  == 'prod'?process.env.MONGO_PROXY_PATH:'');
     const dbName = process.env.MONGO_MIS_DB_NAME;
     const collectionName = process.env.MONGO_MIS_DB_COLLECTION;
 
@@ -86,9 +86,9 @@ async function getDsaHierarchy(dsaMobileNumber) {
     replacements: { dsaMobileNumber },
     type: QueryTypes.SELECT,
   });
-
   results = results.map(row => row.dsa_id);
-  return results.push(process.env.KM_DSA_ID);
+  results.push(process.env.KM_DSA_ID);
+  return results;
 }
 
 module.exports = {
