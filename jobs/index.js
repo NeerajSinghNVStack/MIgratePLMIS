@@ -19,6 +19,7 @@ const preferQueue = new Queue('Prefer Application Queue', redisUrl);
 
 preferQueue.process((job) => preferProcessor(job));
 
+
 preferQueue.add(null,{repeat:{cron:"*/11 * * * *"}});
 
 //fibe cron
@@ -27,8 +28,8 @@ const fibeProcessor = require('./processors/fibeApplications');
 
 const fibeQueue = new Queue('Fibe Application Queue', redisUrl);
 
-fibeQueue.process((job) => fibeProcessor(job));
 
+fibeQueue.process((job) => fibeProcessor(job));
 
 fibeQueue.add(null,{repeat:{cron:"*/13 * * * *"}});
 
@@ -39,6 +40,7 @@ const paysenseProcessor = require('./processors/paysenseApplications');
 const paysenseQueue = new Queue('Paysense Application Queue', redisUrl);
 
 paysenseQueue.process((job) => paysenseProcessor(job));
+
 
 paysenseQueue.add(null,{repeat:{cron:"*/15 * * * *"}});
 

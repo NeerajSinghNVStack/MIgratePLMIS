@@ -5,6 +5,18 @@ const { getDsaHierarchy, updateOrCreateMongoMIS } = require('../../helper'); // 
 const { logger } = require('../../logger');
 const { QueryTypes } = require("sequelize");
 
+const getStatus = (applicationStatus) => {
+  let status;
+  if (applicationStatus === 'LOAN_TAKEN') {
+    status = 'disbursed';
+  } else if (['REJECTED', 'BLOCKED', 'ACCOUNT_RESET', 'ERROR'].includes(applicationStatus)) {
+    status = 'rejected';
+  } else {
+    status = 'approved';
+  }
+  return status;
+};
+
 async function fetchPersonalLoanApplications() {
   try {
     const offsetsFilePath = path.resolve(__dirname, 'offsets.json');
@@ -81,7 +93,7 @@ async function fetchPersonalLoanApplications() {
         disbursed_amount: application.disburse_amount || 0, // Handle null values
         stage: application.stage,
         sub_stage: application.sub_stage,
-        status: null,
+        status: getStatus(application.status),
         disbursed_date: application.disbursed_date,
         status_updated_at: 1, // Replace with appropriate value
       };

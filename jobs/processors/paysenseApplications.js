@@ -5,6 +5,16 @@ const { getDsaHierarchy, updateOrCreateMongoMIS } = require('../../helper'); // 
 const { logger } = require('../../logger');
 const { QueryTypes } = require("sequelize");
 
+const getStatus = (payUApplicationStatus) => {
+  let status = 'pending';
+  if (payUApplicationStatus === 'REJECTED') {
+    status = 'rejected';
+  } else if (payUApplicationStatus === 'disbursed') {
+    status = 'disbursed';
+  }
+  return status;
+};
+
 async function fetchPersonalLoanApplications() {
   try {
     const offsetsFilePath = path.resolve(__dirname, 'offsets.json');
@@ -81,10 +91,11 @@ async function fetchPersonalLoanApplications() {
         disbursed_amount: application.disburse_amount || 0, // Handle null values
         stage: application.stage,
         sub_stage: application.sub_stage,
-        status: null,
+        status: getStatus(application.status),
         disbursed_date: application.disbursed_date,
         status_updated_at: 1, // Replace with appropriate value
       };
+      //console.log(formattedApplication)
 
       try {
         // Update or create MongoDB record for each application

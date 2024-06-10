@@ -5,6 +5,29 @@ const { getDsaHierarchy, updateOrCreateMongoMIS } = require('../../helper'); // 
 const { logger } = require('../../logger');
 const { QueryTypes } = require("sequelize");
 
+const getStatus = (subStage) => {
+  let status;
+
+  if ([
+    'bureau_success', 'policy_approved', 'offer_accepted', 'tentative_offer_accepted',
+    'ops_approved', 'agreement_accepted', 'policy_approved_tentative',
+    'bureau_alternate_number', 'loan_application_started', 'pan_success',
+    'personal_details', 'nach_success'
+  ].includes(subStage)) {
+    status = 'approved';
+  } else if ([
+    'bureau_rejected', 'policy_rejected', 'ops_rejected', 'age_rejected', 'pincode_rejected'
+  ].includes(subStage)) {
+    status = 'rejected';
+  } else if (['disbursal_success'].includes(subStage)) {
+    status = 'disbursed';
+  } else {
+    status = 'pending';
+  }
+
+  return status;
+};
+
 async function fetchPersonalLoanApplications() {
   try {
     const offsetsFilePath = path.resolve(__dirname, 'offsets.json');
@@ -68,6 +91,7 @@ async function fetchPersonalLoanApplications() {
         logger.error(`Error fetching DSA hierarchy for ${type} application`, { application_id: application.application_id, error });
         continue; // Continue to the next application if an error occurs while fetching DSA hierarchy
       }
+
       const formattedApplication = {
         application_id: application.application_id,
         lender: `${type.toLowerCase()}_pl`,
@@ -79,7 +103,7 @@ async function fetchPersonalLoanApplications() {
         users: dsaHierarchy,
         approved_amount: application.loan_amount,
         disbursed_amount: application.disburse_amount,
-        status: null,
+        status: getStatus(application.sub_stage),
         stage: application.stage,
         sub_stage: application.sub_stage,
         approved_date: null,
