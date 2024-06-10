@@ -117,7 +117,7 @@ async function fetchPersonalLoanApplications() {
         disbursed_amount: application.disburse_amount || 0, // Handle null values
         stage: application.stage,
         sub_stage: application.sub_stage,
-        status: null,
+        status: getStatus(application.stage, application.sub_stage),
         disbursed_date: application.disburse_date,
         status_updated_at: 1, // Replace with appropriate value
       };
