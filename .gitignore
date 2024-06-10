@@ -10,6 +10,8 @@ error.log
 combined.log
 report.pdf
 
+jobs/processors/offset.json
+
 logs/error/.log
 logs/warn/.log
 logs/info/*.log
@@ -114,6 +116,8 @@ dist
 
 # FuseBox cache
 .fusebox/
+
+
 
 # DynamoDB Local files
 .dynamodb/
