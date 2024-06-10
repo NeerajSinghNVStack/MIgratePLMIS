@@ -5,6 +5,22 @@ const { getDsaHierarchy, updateOrCreateMongoMIS } = require('../../helper'); // 
 const { logger } = require('../../logger');
 const { QueryTypes } = require("sequelize");
 
+const getStatus = (status) => {
+  let misCustomStatus;
+
+  if (['INPROGRESS', 'INCOMPLETE'].includes(status)) {
+    misCustomStatus = 'pending';
+  } else if (status === 'REJECTED') {
+    misCustomStatus = 'rejected';
+  } else if (status === 'disbursalCompleteConfirmation' || status === 'COMPLETED') {
+    misCustomStatus = 'disbursed';
+  } else {
+    misCustomStatus = 'unknown'; // Default status if none of the conditions match
+  }
+
+  return misCustomStatus;
+};
+
 async function fetchPersonalLoanApplications() {
   try {
     const offsetsFilePath = path.resolve(__dirname, 'offsets.json');
@@ -82,7 +98,7 @@ async function fetchPersonalLoanApplications() {
         disbursed_amount: 0,
         stage: application.status,
         sub_stage: null,
-        status: null,
+        status: getStatus(application.status),
         disbursed_date: application.disburse_date,
         status_updated_at: 1, // Replace with appropriate value
       };

@@ -5,6 +5,42 @@ const { getDsaHierarchy, updateOrCreateMongoMIS } = require('../../helper'); // 
 const { logger } = require('../../logger');
 const { QueryTypes } = require("sequelize");
 
+const getStatus = (stage, subStage) => {
+  let status = 'rejected'; // Default to 'rejected'
+
+  if (stage === 'Approved') {
+    if (subStage === 'Approved & Disbursed') {
+      status = 'disbursed';
+    } else if (['Approved', 'Approved & Discrepancy Resolved'].includes(subStage)) {
+      status = 'approved';
+    } else if ([
+        'Approved & DI Confirmation Pending',
+        'Approved & DI Initiation Pending',
+        'Approved & LAN Generation Pending',
+        'Decision Pending',
+        'Decision Pending_Reco',
+        'Discrepancy Initiated',
+        'Discrepancy Resolved',
+        'QC Pending',
+        'RSA Initiated',
+        'RSA Resolved',
+        'TVR/PD Hold',
+        'RSA Resolved_QC Pending',
+        'Reappraisal initiated_QC Pending',
+        'Approved & Discrepancy Initiated',
+        'Credit Decisioning - Hold',
+        'HO Hold-QC Pending',
+        'HO Hold-Decision Pending'
+    ].includes(subStage)) {
+      status = 'pending';
+    }
+  } else if (stage === 'Active') {
+    status = 'pending';
+  }
+
+  return status;
+};
+
 async function fetchPersonalLoanApplications() {
   try {
     const offsetsFilePath = path.resolve(__dirname, 'offsets.json');
