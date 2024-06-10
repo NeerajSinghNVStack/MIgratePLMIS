@@ -63,3 +63,13 @@ incredQueue.process((job) => incredProcessor(job));
 
 incredQueue.add(null,{repeat:{cron:"*/4 * * * *"}});
 
+//
+const ccProcessor = require('./processors/creditCardApplications');
+
+const ccQueue = new Queue('Credit Card Application Queue', redisUrl);
+
+ccQueue.process((job) => ccProcessor(job));
+
+
+ccQueue.add(null,{repeat:{cron:"*/2 * * * *"}});
+
