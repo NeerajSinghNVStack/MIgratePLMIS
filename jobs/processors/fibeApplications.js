@@ -44,6 +44,7 @@ async function fetchPersonalLoanApplications() {
         fpl.dsa_mobile_number AS dsa_mobile_number,
         fpl.sub_stage AS stage,
         fpl.stage AS sub_stage,
+        fpl.status AS status,
         fpl.disburse_amount,
         fpl.disbursed_date
       FROM

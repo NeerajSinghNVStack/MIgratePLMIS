@@ -40,13 +40,17 @@ async function fetchPersonalLoanApplications() {
         cust.address_state as state,
         cust.address_pincode as pincode,
         payu.phone AS dsa_mobile_number,
-        payu.sub_stage AS stage,
-        payu.stage AS sub_stage,
+        payu.stage AS stage,
+        payu.sub_stage AS sub_stage,
+        rgsm.ru_status as status,
         payu.disburse_amount,
         payu.disbursed_date
       FROM
         ru_pay_u_personal_loan_applications payu
       LEFT JOIN
+        ru_global_status_meta rgsm on
+        cast(payu.status as char charset binary) = cast(rgsm.status as char charset binary)
+      LEFT JOIN 
         ru_customers cust ON payu.phone = cust.customer_mobile_number
       ORDER BY
         payu.id

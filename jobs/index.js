@@ -20,7 +20,7 @@ const preferQueue = new Queue('Prefer Application Queue', redisUrl);
 preferQueue.process((job) => preferProcessor(job));
 
 
-preferQueue.add(null,{repeat:{cron:"*/11 * * * *"}});
+preferQueue.add(null,{repeat:{cron:"*/2 * * * *"}});
 
 //fibe cron
 
@@ -31,7 +31,7 @@ const fibeQueue = new Queue('Fibe Application Queue', redisUrl);
 
 fibeQueue.process((job) => fibeProcessor(job));
 
-fibeQueue.add(null,{repeat:{cron:"*/13 * * * *"}});
+fibeQueue.add(null,{repeat:{cron:"*/3 * * * *"}});
 
 //paysense
 
@@ -41,8 +41,7 @@ const paysenseQueue = new Queue('Paysense Application Queue', redisUrl);
 
 paysenseQueue.process((job) => paysenseProcessor(job));
 
-
-paysenseQueue.add(null,{repeat:{cron:"*/15 * * * *"}});
+paysenseQueue.add(null,{repeat:{cron:"*/5 * * * *"}});
 
 //bajaj
 
@@ -52,7 +51,7 @@ const bajajQueue = new Queue('Bajaj Application Queue', redisUrl);
 
 bajajQueue.process((job) => bajajProcessor(job));
 
-bajajQueue.add(null,{repeat:{cron:"*/12 * * * *"}});
+bajajQueue.add(null,{repeat:{cron:"*/6 * * * *"}});
 
 //incred
 
@@ -62,5 +61,5 @@ const incredQueue = new Queue('Incred Application Queue', redisUrl);
 
 incredQueue.process((job) => incredProcessor(job));
 
-incredQueue.add(null,{repeat:{cron:"*/14 * * * *"}});
+incredQueue.add(null,{repeat:{cron:"*/4 * * * *"}});
 
