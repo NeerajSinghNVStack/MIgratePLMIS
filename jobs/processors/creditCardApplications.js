@@ -5,21 +5,17 @@ const { getDsaHierarchy, updateOrCreateMongoMIS } = require('../../helper'); // 
 const { logger } = require('../../logger');
 const { QueryTypes } = require("sequelize");
 
-// const getStatus = (status) => {
-//   let misCustomStatus;
-
-//   if (['INPROGRESS', 'INCOMPLETE'].includes(status)) {
-//     misCustomStatus = 'pending';
-//   } else if (status === 'REJECTED') {
-//     misCustomStatus = 'rejected';
-//   } else if (['disbursalCompleteConfirmation', 'COMPLETED'].includes(status)) {
-//     misCustomStatus = 'disbursed';
-//   } else {
-//     misCustomStatus = 'unknown'; // Default status if none of the conditions match
-//   }
-
-//   return misCustomStatus;
-// };
+const getStatus = (status) => {
+  let customStatus;
+  if(status == 'Approved'){
+    customStatus = 'approved';
+  }else if(status == 'Pending/WIP'){
+    customStatus = 'pending';
+  }else{
+    customStatus = 'rejected';
+  }
+  return customStatus;
+};
 
 
 function toUnderscoreSeparatedLowerCase(str) {
@@ -116,7 +112,7 @@ async function fetchCreditCardApplications() {
         disbursed_amount: null, // Not applicable for credit card
         stage: application.stage,
         sub_stage: application.sub_stage,
-        status: application.status,
+        status: getStatus(application.status),
         disbursed_date: null, // Not applicable for credit card
         updated_at: application.updated_at,
         created_at: application.created_at,

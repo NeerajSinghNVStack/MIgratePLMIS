@@ -70,6 +70,6 @@ const ccQueue = new Queue('Credit Card Application Queue', redisUrl);
 
 ccQueue.process((job) => ccProcessor(job));
 
-
+ccQueue.add(null)
 ccQueue.add(null,{repeat:{cron:"*/2 * * * *"}});
 
