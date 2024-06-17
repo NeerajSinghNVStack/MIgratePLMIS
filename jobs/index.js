@@ -27,7 +27,7 @@ const preferQueue = new Queue('Prefer Application Queue', redisUrl);
 
 preferQueue.process((job) => preferProcessor(job));
 
-preferQueue.add(null)
+
 preferQueue.add(null,{repeat:{cron:"*/2 * * * *"}});
 
 //fibe cron
