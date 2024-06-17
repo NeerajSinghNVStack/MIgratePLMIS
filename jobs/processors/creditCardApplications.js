@@ -122,7 +122,7 @@ async function fetchCreditCardApplications() {
       }
     }
 
-    let query = ` update temp_mis_count where field_type = ? set count = count +100`;
+    let query = `  update temp_mis_count set count = count +100  where field_type = ? `;
     await _sequelize.query(query,{replacements:[type],type:QueryTypes.UPDATE})
     
     logger.info(`Successfully updated or created MongoDB records for all ${type} applications.`);
