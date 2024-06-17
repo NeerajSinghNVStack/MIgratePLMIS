@@ -30,19 +30,13 @@ const getStatus = (subStage) => {
 
 async function fetchPersonalLoanApplications() {
   try {
-    const offsetsFilePath = path.resolve(__dirname, 'offsets.json');
 
-    // Read offsets from JSON file
-    let offsets = {};
-    try {
-      offsets = JSON.parse(fs.readFileSync(offsetsFilePath));
-    } catch (err) {
-      logger.error('Error reading offsets file:', err);
-    }
-
+   
     const batchSize = 100;
     const type = 'Prefer'; // Assuming you are fetching applications of type "Prefer"
-
+    let queryOffset = ` select * from  temp_mis_count where field_type = ? `;
+    let offsetCount = await _sequelize.query(queryOffset,{replacements:[type],type:QueryTypes.SELECT})
+   
     logger.info(`Fetching the first ${batchSize} ${type} personal loan applications.`);
 
     const applicationsQuery = `
@@ -73,7 +67,7 @@ async function fetchPersonalLoanApplications() {
     const applications = await _sequelize.query(applicationsQuery, {
       type: QueryTypes.SELECT,
       replacements: {
-        offset: offsets[type] || 0,
+        offset: offsetCount[0].count || 0,
         limit: batchSize,
       },
     });
@@ -127,11 +121,8 @@ async function fetchPersonalLoanApplications() {
     }
 
     // Update offset for the type
-    offsets[type] = (offsets[type] || 0) + batchSize;
-
-    // Write updated offsets to JSON file
-    fs.writeFileSync(offsetsFilePath, JSON.stringify(offsets, null, 2));
-
+    let query = ` update temp_mis_count where field_type = ? and count = count +100`;
+    await _sequelize.query(query,{replacements:[type],type:QueryTypes.UPDATE})
     logger.info(`Successfully updated or created MongoDB records for all ${type} applications.`);
     return true;
 
