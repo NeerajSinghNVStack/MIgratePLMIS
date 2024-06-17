@@ -77,11 +77,12 @@ async function getDsaHierarchy(dsaMobileNumber) {
     UNION ALL
     SELECT t.dsa_mobile_number, t.partner_code, t.dsa_id
     FROM ru_direct_selling_agents t
-    INNER JOIN DSAHierarchy d ON t.partner_code = d.dsa_mobile_number
-    WHERE t.partner_code IS NOT NULL
-  )
-  SELECT dsa_id
-  FROM DSAHierarchy`;
+    INNER JOIN DSAHierarchy d ON t.dsa_mobile_number = d.partner_code
+    WHERE t.dsa_mobile_number IS NOT NULL
+)
+SELECT dsa_id
+FROM DSAHierarchy;
+`;
 
   let results = await _sequelize.query(hierarchyQuery, {
     replacements: { dsaMobileNumber },
