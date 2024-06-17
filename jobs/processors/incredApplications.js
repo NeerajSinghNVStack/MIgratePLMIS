@@ -48,6 +48,8 @@ async function fetchPersonalLoanApplications() {
         cust.address_pincode as pincode,
         incred.dsa_mobile_number,
         incred.status,
+        incred.created_at,
+        incred.updated_at,
         incred.disburse_date
       FROM
         ru_incred_personal_loan_applications incred
@@ -100,6 +102,8 @@ async function fetchPersonalLoanApplications() {
         sub_stage: null,
         status: getStatus(application.status),
         disbursed_date: application.disburse_date,
+        updated_at: application.updated_at,
+        created_at: application.created_at,
         status_updated_at: 1, // Replace with appropriate value
       };
 

@@ -57,7 +57,9 @@ async function fetchPersonalLoanApplications() {
         cp.stage,
         cp.sub_stage,
         cp.disburse_date,
-        cp.dsa_mobile_number
+        cp.dsa_mobile_number,
+        cp.created_at,
+        cp.updated_at
       FROM
         ru_credit_vidya_personal_loan_applications cp
       LEFT JOIN
@@ -108,6 +110,8 @@ async function fetchPersonalLoanApplications() {
         sub_stage: application.sub_stage,
         approved_date: null,
         disbursed_date: application.disburse_date,
+        updated_at: application.updated_at,
+        created_at: application.created_at,
         status_updated_at: new Date(),
       };
 

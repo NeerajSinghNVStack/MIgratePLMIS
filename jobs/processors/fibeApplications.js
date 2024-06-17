@@ -46,7 +46,9 @@ async function fetchPersonalLoanApplications() {
         fpl.stage AS sub_stage,
         fpl.status AS status,
         fpl.disburse_amount,
-        fpl.disbursed_date
+        fpl.disbursed_date,
+        fpl.created_at,
+        fpl.updated_at
       FROM
         ru_fibe_personal_loan_applications fpl
       LEFT JOIN
@@ -96,6 +98,8 @@ async function fetchPersonalLoanApplications() {
         sub_stage: application.sub_stage,
         status: getStatus(application.status),
         disbursed_date: application.disbursed_date,
+        updated_at: application.updated_at,
+        created_at: application.created_at,
         status_updated_at: 1, // Replace with appropriate value
       };
 

@@ -69,7 +69,9 @@ async function fetchPersonalLoanApplications() {
         bajaj.sub_stage AS stage,
         bajaj.sub_stage AS sub_stage,
         bajaj.disburse_amount,
-        bajaj.disburse_date
+        bajaj.disburse_date,
+        bajaj.created_at,
+        bajaj.updated_at
       FROM
         ru_bajaj_finance_personal_loan_applications bajaj
       LEFT JOIN
@@ -119,6 +121,8 @@ async function fetchPersonalLoanApplications() {
         sub_stage: application.sub_stage,
         status: getStatus(application.stage, application.sub_stage),
         disbursed_date: application.disburse_date,
+        updated_at: application.updated_at,
+        created_at: application.created_at,
         status_updated_at: 1, // Replace with appropriate value
       };
 

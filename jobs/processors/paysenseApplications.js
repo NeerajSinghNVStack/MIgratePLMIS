@@ -44,7 +44,9 @@ async function fetchPersonalLoanApplications() {
         payu.sub_stage AS sub_stage,
         rgsm.ru_status as status,
         payu.disburse_amount,
-        payu.disbursed_date
+        payu.disbursed_date,
+        payu.created_at,
+        payu.updated_at
       FROM
         ru_pay_u_personal_loan_applications payu
       LEFT JOIN
@@ -85,7 +87,7 @@ async function fetchPersonalLoanApplications() {
         application_id: application.application_id,
         lender: `${type}_pl`,
         loan_type: 'personal_loan',
-        applied_amount: application.applied_amount,
+        applied_amount: application.applied_amount || 0,
         approved_amount: application.approved_amount || 0, // Handle null values
         approved_date: 1, // Replace with appropriate value
         city: application.city,
@@ -97,10 +99,10 @@ async function fetchPersonalLoanApplications() {
         sub_stage: application.sub_stage,
         status: getStatus(application.status),
         disbursed_date: application.disbursed_date,
+        updated_at: application.updated_at,
+        created_at: application.created_at,
         status_updated_at: 1, // Replace with appropriate value
       };
-      //console.log(formattedApplication)
-
       try {
         // Update or create MongoDB record for each application
         await updateOrCreateMongoMIS(formattedApplication);

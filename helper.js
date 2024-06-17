@@ -70,19 +70,18 @@ async function updateOrCreateMongoMIS(application) {
 
 async function getDsaHierarchy(dsaMobileNumber) {
   const hierarchyQuery = `
-    WITH RECURSIVE DSAHierarchy AS (
-      SELECT dsa_mobile_number, partner_code, dsa_id
-      FROM ru_direct_selling_agents
-      WHERE dsa_mobile_number = :dsaMobileNumber
-      UNION ALL
-      SELECT t.dsa_mobile_number, t.partner_code, t.dsa_id
-      FROM ru_direct_selling_agents t
-      INNER JOIN DSAHierarchy d ON t.partner_code = d.dsa_mobile_number
-      WHERE t.partner_code IS NOT NULL
-    )
-    SELECT dsa_id
-    FROM DSAHierarchy;
-  `;
+  WITH RECURSIVE DSAHierarchy AS (
+    SELECT dsa_mobile_number, partner_code, dsa_id
+    FROM ru_direct_selling_agents
+    WHERE dsa_mobile_number = :dsaMobileNumber
+    UNION ALL
+    SELECT t.dsa_mobile_number, t.partner_code, t.dsa_id
+    FROM ru_direct_selling_agents t
+    INNER JOIN DSAHierarchy d ON t.partner_code = d.dsa_mobile_number
+    WHERE t.partner_code IS NOT NULL
+  )
+  SELECT dsa_id
+  FROM DSAHierarchy`;
 
   let results = await _sequelize.query(hierarchyQuery, {
     replacements: { dsaMobileNumber },
