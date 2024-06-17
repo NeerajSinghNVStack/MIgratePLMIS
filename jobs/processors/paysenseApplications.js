@@ -21,7 +21,7 @@ async function fetchPersonalLoanApplications() {
     const batchSize = 100;
     const type = 'paysense'; // Type for paysense personal loan applications
     let queryOffset = ` select * from  temp_mis_count where field_type = ? `;
-    let offsetCount = await _sequelize.query(queryOffset,{replacements:[type],type:QueryTypes.SELECT})
+    let offsetCount = await _dbWrite.query(queryOffset,{replacements:[type],type:QueryTypes.SELECT})
    
     logger.info(`Fetching the first ${batchSize} ${type} 100 personal loan applications.`);
 
@@ -106,8 +106,8 @@ async function fetchPersonalLoanApplications() {
       }
     }
 
-    let query = `  update temp_mis_count set count = count +100  where field_type = ? `;
-    await _sequelize.query(query,{replacements:[type],type:QueryTypes.UPDATE})
+    let query = `  update temp_mis_count set count = count + ${applications.length}  where field_type = ? `;
+    await _dbWrite.query(query,{replacements:[type],type:QueryTypes.UPDATE})
     
     logger.info(`Successfully updated or created MongoDB records for all ${type} applications.`);
     return true;

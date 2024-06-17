@@ -11,15 +11,23 @@ global._sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABAS
     logging: true 
   });
 
+  global._dbWrite = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER_NAME, process.env.DATABASE_PASSWORD, {
+    host: process.env.DATABASE_HOST_WRITE,
+    dialect: process.env.DATABASE_DIALECT,
+    timezone: '+05:30',
+    logging: true 
+  });
+
 // prefer Cron
 
 const preferProcessor = require('./processors/preferApplications');
 
 const preferQueue = new Queue('Prefer Application Queue', redisUrl);
 
+
 preferQueue.process((job) => preferProcessor(job));
 
-
+preferQueue.add(null)
 preferQueue.add(null,{repeat:{cron:"*/2 * * * *"}});
 
 //fibe cron
