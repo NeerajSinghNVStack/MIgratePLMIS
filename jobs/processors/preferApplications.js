@@ -121,7 +121,7 @@ async function fetchPersonalLoanApplications() {
     }
 
     // Update offset for the type
-    let query = ` update temp_mis_count where field_type = ? and count = count +100`;
+    let query = ` update temp_mis_count where field_type = ? set count = count +100`;
     await _sequelize.query(query,{replacements:[type],type:QueryTypes.UPDATE})
     logger.info(`Successfully updated or created MongoDB records for all ${type} applications.`);
     return true;
