@@ -41,6 +41,7 @@ async function fetchPersonalLoanApplications() {
         incred.dsa_mobile_number,
         incred.status,
         incred.created_at,
+        incred.disburse_amount,
         incred.updated_at,
         incred.disburse_date
       FROM
@@ -89,7 +90,7 @@ async function fetchPersonalLoanApplications() {
         state: application.state,
         pincode: application.pincode,
         users: dsaHierarchy,
-        disbursed_amount: 0,
+        disbursed_amount: application.disburse_amount || 0,
         stage: application.status,
         sub_stage: null,
         status: getStatus(application.status),
