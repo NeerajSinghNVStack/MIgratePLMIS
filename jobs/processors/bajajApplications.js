@@ -54,6 +54,7 @@ async function fetchPersonalLoanApplications() {
       SELECT
         bajaj.application_id,
         bajaj.requested_loan_amount AS applied_amount,
+        rlp.original_loan_amount,
         cust.address_city as city,
         cust.address_state as state,
         cust.address_pincode as pincode,
@@ -66,6 +67,8 @@ async function fetchPersonalLoanApplications() {
         bajaj.updated_at
       FROM
         ru_bajaj_finance_personal_loan_applications bajaj
+      LEFT JOIN
+        ru_loan_applications rlp on  bajaj.application_id = rlp.application_id 
       LEFT JOIN
         ru_customers cust ON bajaj.mobile_number = cust.customer_mobile_number
       ORDER BY
@@ -101,7 +104,7 @@ async function fetchPersonalLoanApplications() {
         application_id: application.application_id,
         lender: `${type}_pl`,
         loan_type: 'personal_loan',
-        applied_amount: application.applied_amount,
+        applied_amount: application.original_loan_amount,
         approved_amount: 0, // Initialize approved amount to 0
         approved_date: null,
         city: application.city,
@@ -117,6 +120,8 @@ async function fetchPersonalLoanApplications() {
         created_at: application.created_at,
         status_updated_at: 1, // Replace with appropriate value
       };
+
+      console.log(formattedApplication)
 
       try {
         // Update or create MongoDB record for each application

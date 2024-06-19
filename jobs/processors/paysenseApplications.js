@@ -29,6 +29,7 @@ async function fetchPersonalLoanApplications() {
       SELECT
         payu.application_id,
         payu.approved_limit AS approved_amount,
+        rlp.original_loan_amount,
         cust.address_city as city,
         cust.address_state as state,
         cust.address_pincode as pincode,
@@ -42,6 +43,8 @@ async function fetchPersonalLoanApplications() {
         payu.updated_at
       FROM
         ru_pay_u_personal_loan_applications payu
+      LEFT JOIN
+      ru_loan_applications rlp on  payu.application_id = rlp.application_id 
       LEFT JOIN
         ru_global_status_meta rgsm on
         cast(payu.status as char charset binary) = cast(rgsm.status as char charset binary)
@@ -80,7 +83,7 @@ async function fetchPersonalLoanApplications() {
         application_id: application.application_id,
         lender: `${type}_pl`,
         loan_type: 'personal_loan',
-        applied_amount: application.applied_amount || 0,
+        applied_amount: application.original_loan_amount || 0,
         approved_amount: application.approved_amount || 0, // Handle null values
         approved_date: 1, // Replace with appropriate value
         city: application.city,
@@ -96,6 +99,7 @@ async function fetchPersonalLoanApplications() {
         created_at: application.created_at,
         status_updated_at: 1, // Replace with appropriate value
       };
+      console.log(formattedApplication)
       try {
         // Update or create MongoDB record for each application
         await updateOrCreateMongoMIS(formattedApplication);

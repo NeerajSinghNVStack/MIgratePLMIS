@@ -31,6 +31,7 @@ async function fetchPersonalLoanApplications() {
       SELECT
         fpl.application_id,
         fpl.sanctionLimit AS approved_amount,
+        rlp.original_loan_amount,
         cust.address_city as city,
         cust.address_state as state,
         cust.address_pincode as pincode,
@@ -38,12 +39,15 @@ async function fetchPersonalLoanApplications() {
         fpl.sub_stage AS stage,
         fpl.stage AS sub_stage,
         fpl.status AS status,
+        fpl.inPrincipleLimit,
         fpl.disburse_amount,
         fpl.disbursed_date,
         fpl.created_at,
         fpl.updated_at
       FROM
         ru_fibe_personal_loan_applications fpl
+      LEFT JOIN
+        ru_loan_applications rlp on  fpl.application_id = rlp.application_id
       LEFT JOIN
         ru_customers cust ON fpl.mobilenumber = cust.customer_mobile_number
       ORDER BY
@@ -79,8 +83,8 @@ async function fetchPersonalLoanApplications() {
         application_id: application.application_id,
         lender: `${type}_pl`,
         loan_type: 'personal_loan',
-        applied_amount: application.applied_amount,
-        approved_amount: application.approved_amount,
+        applied_amount: application.original_loan_amount || 0,
+        approved_amount: application.approved_amount || application.inPrincipleLimit,
         approved_date: 1, // Replace with appropriate value
         city: application.city,
         state: application.state,
@@ -95,6 +99,7 @@ async function fetchPersonalLoanApplications() {
         created_at: application.created_at,
         status_updated_at: 1, // Replace with appropriate value
       };
+      console.log(formattedApplication)
 
       try {
         // Update or create MongoDB record for each application

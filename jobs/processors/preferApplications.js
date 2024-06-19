@@ -98,7 +98,7 @@ async function fetchPersonalLoanApplications() {
         pincode: application.current_address_pincode,
         users: dsaHierarchy,
         approved_amount: application.loan_amount,
-        disbursed_amount: application.disburse_amount,
+        disbursed_amount: application.loan_amount,
         status: getStatus(application.sub_stage),
         stage: application.stage,
         sub_stage: application.sub_stage,
