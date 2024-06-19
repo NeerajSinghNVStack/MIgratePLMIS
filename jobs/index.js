@@ -67,7 +67,16 @@ const incredQueue = new Queue('Incred Application Queue', redisUrl);
 incredQueue.process((job) => incredProcessor(job));
 incredQueue.add(null,{repeat:{cron:"*/4 * * * *"}});
 
-//
+//lnt
+const lntProcessor = require('./processors/lntApplications');
+
+const lntQueue = new Queue('Lnt Application Queue', redisUrl);
+
+lntQueue.process((job) => lntProcessor(job));
+lntQueue.add(null,{repeat:{cron:"*/3 * * * *"}});
+
+
+// credit card
 const ccProcessor = require('./processors/creditCardApplications');
 
 const ccQueue = new Queue('Credit Card Application Queue', redisUrl);
