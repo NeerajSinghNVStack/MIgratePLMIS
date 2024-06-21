@@ -5,18 +5,18 @@ const { getDsaHierarchy, updateOrCreateMongoMIS } = require('../../helper'); // 
 const { logger } = require('../../logger');
 const { QueryTypes } = require("sequelize");
 
-const getStatus = (subStage) => {
-  let status;
+const getStatus = (status) => {
+  let statusValue;
 
-  if (status == 6) {
-    status = 'rejected';
-  } else  if (status == 7)  {
-    status = 'disbursed';
+  if (statusValue == 6) {
+    statusValue = 'rejected';
+  } else  if (statusValue == 7)  {
+    statusValue = 'disbursed';
   } else {
-    status = 'pending';
+    statusValue = 'pending';
   }
 
-  return status;
+  return statusValue;
 };
 
 async function fetchPersonalLoanApplications() {
