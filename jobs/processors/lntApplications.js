@@ -8,9 +8,9 @@ const { QueryTypes } = require("sequelize");
 const getStatus = (status) => {
   let statusValue;
 
-  if (statusValue == 6) {
+  if (status == 6) {
     statusValue = 'rejected';
-  } else  if (statusValue == 7)  {
+  } else  if (status == 7)  {
     statusValue = 'disbursed';
   } else {
     statusValue = 'pending';
