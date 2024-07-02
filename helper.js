@@ -21,7 +21,7 @@ async function updateOrCreateMongoMIS(application) {
           useNewUrlParser: true,
           useUnifiedTopology: true,
           tlsCAFile: pemPath, // Ensure this matches the URI parameter
-          tls: true,
+          //tls: true,
           tlsAllowInvalidCertificates: false, // Set to true if you want to allow invalid certificates
           tlsAllowInvalidHostnames: false,   // Set to true if you want to allow invalid hostnames
           serverSelectionTimeoutMS: 5000     // Adjust the timeout as needed
